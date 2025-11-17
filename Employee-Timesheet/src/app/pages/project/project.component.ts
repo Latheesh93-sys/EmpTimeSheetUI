@@ -24,15 +24,6 @@ export class ProjectComponent implements OnInit {
   employeeMap: { [id: number]: EmpResponseDTO } = {};
   editingProjectId?: number;
   isLoading = false;
-  dropdownSettings = {
-    singleSelection: false,
-    idField: 'id',
-    textField: 'name',
-    selectAllText: 'Select All',
-    unSelectAllText: 'Unselect All',
-    itemsShowLimit: 3,
-    allowSearchFilter: true
-  };
 
   constructor(
     private fb: FormBuilder,
