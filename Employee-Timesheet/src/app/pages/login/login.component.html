@@ -1,0 +1,51 @@
+<div class="container d-flex justify-content-center align-items-center min-vh-100">
+  <div class="card shadow-sm p-4" style="max-width: 400px; width: 100%;">
+    <h3 class="text-center mb-4">Login</h3>
+
+    <form (ngSubmit)="onLogin()" #loginForm="ngForm" novalidate>
+      <!-- Username -->
+      <div class="mb-3">
+        <label for="username" class="form-label">Username</label>
+        <input
+          id="username"
+          type="text"
+          class="form-control"
+          placeholder="Enter username"
+          [(ngModel)]="username"
+          name="username"
+          required
+          #usernameField="ngModel"
+        />
+        <div *ngIf="usernameField.invalid && usernameField.touched" class="text-danger small mt-1">
+          Username is required.
+        </div>
+      </div>
+
+      <!-- Password -->
+      <div class="mb-3">
+        <label for="password" class="form-label">Password</label>
+        <input
+          id="password"
+          type="password"
+          class="form-control"
+          placeholder="Enter password"
+          [(ngModel)]="password"
+          name="password"
+          required
+          #passwordField="ngModel"
+        />
+        <div *ngIf="passwordField.invalid && passwordField.touched" class="text-danger small mt-1">
+          Password is required.
+        </div>
+      </div>
+
+      <!-- Submit Button -->
+      <div class="d-grid">
+        <button type="submit" class="btn btn-primary" [disabled]="isLoading || loginForm.invalid">
+          <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2"></span>
+          Login
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

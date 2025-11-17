@@ -1,0 +1,14 @@
+
+<nav class="navbar">
+  <div class="logo">Employee Timesheet</div>
+  <ul class="nav-links">
+    <li><a routerLink="/employee" routerLinkActive="active">Employee</a></li>
+    <li><a routerLink="/project" routerLinkActive="active">Project</a></li>
+    <li><a routerLink="/timesheet" routerLinkActive="active">Timesheet</a></li>
+  </ul>
+  <button class="logout-btn" (click)="logout()">Logout</button>
+</nav>
+
+<div class="content">
+  <router-outlet></router-outlet>
+</div>

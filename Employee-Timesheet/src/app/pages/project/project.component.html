@@ -1,0 +1,122 @@
+<div class="container py-4">
+  <div class="card shadow-sm">
+    <div class="card-body">
+      <h3 class="card-title mb-3">Add Project</h3>
+
+      <form [formGroup]="projectForm" (ngSubmit)="saveProject()">
+        <div class="row g-3">
+          <!-- Project Name -->
+          <div class="col-md-3">
+            <label class="form-label">Project Name:</label>
+            <input type="text" formControlName="name" class="form-control" placeholder="Enter project name" />
+            <div *ngIf="projectForm.get('name')?.touched && projectForm.get('name')?.invalid" class="text-danger small mt-1">
+            Project name is required (min 3 chars)
+          </div>
+          </div>
+
+          <!-- Start Date -->
+          <div class="col-md-3">
+            <label class="form-label">Start Date:</label>
+            <input type="date" formControlName="startDate" class="form-control" />
+            <div *ngIf="projectForm.get('startDate')?.touched && projectForm.get('startDate')?.invalid" class="text-danger small mt-1">
+            Start date is required 
+          </div>
+          </div>
+
+          <!-- End Date -->
+          <div class="col-md-3">
+            <label class="form-label">End Date:</label>
+            <input type="date" formControlName="endDate" class="form-control" />
+            <div *ngIf="projectForm.get('endDate')?.touched && projectForm.get('endDate')?.invalid" class="text-danger small mt-1">
+            End date is required
+          </div>
+          </div>
+
+          <!-- Primary Manager -->
+          <div class="col-md-3">
+            <label class="form-label">Primary Manager:</label>
+            <input type="text" formControlName="primaryManager" class="form-control" placeholder="Enter primary manager" />
+            <div *ngIf="projectForm.get('primaryManager')?.touched && projectForm.get('primaryManager')?.invalid" class="text-danger small mt-1">
+              Primary manager name is required
+            </div>
+          </div>
+
+          <!-- Secondary Manager -->
+          <div class="col-md-3">
+            <label class="form-label">Secondary Manager:</label>
+            <input type="text" formControlName="secondaryManager" class="form-control" placeholder="Enter secondary manager" />
+            <div *ngIf="projectForm.get('secondaryManager')?.touched && projectForm.get('secondaryManager')?.invalid" class="text-danger small mt-1">
+              Secondary manager name is required
+            </div>
+          </div>
+
+          <!-- Assign Employees -->
+          <div class="col-md-6">
+            <label class="form-label">Assign Employees:</label>
+            <ng-select
+              [items]="employees"
+              bindLabel="name"
+              bindValue="id"
+              formControlName="employeeIds"
+              [multiple]="true"
+              placeholder="Select employees"
+              [searchable]="true"
+              [clearable]="true"
+              [closeOnSelect]="false"
+              [dropdownPosition]="'bottom'"
+              [hideSelected]="true"
+              class="w-100">
+            </ng-select>
+          </div>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="mt-4 text-end">
+          <button type="submit" class="btn btn-primary" [disabled]="isLoading || projectForm.invalid">
+            <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2"></span>
+            {{ formMode === 'INSERT' ? 'Add' : 'Update' }}
+          </button>
+          &nbsp;
+          <button class="btn btn-secondary"  *ngIf="formMode === 'EDIT'" (click)="cancelEdit()">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <br>
+  <div class="card shadow-sm">
+    <div class="card-body">
+      <h3 class="card-title mb-3">Project List</h3>
+      <div class="table-responsive">
+        <table class="table table-striped table-hover align-middle">
+          <thead class="table-dark">
+            <tr>
+              <th>Name</th>
+              <th>Start Date</th>
+              <th>End Date</th>
+              <th>Primary Manager</th>
+              <th>Secondary Manager</th>
+              <th>Employees</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let prj of projects">
+              <td>{{ prj.name }}</td>
+              <td>{{ prj.startDate| date:'dd/MM/yyyy' }}</td>
+              <td>{{ prj.endDate| date:'dd/MM/yyyy' }}</td>
+              <td>{{ prj.primarymanager }}</td>
+              <td>{{ prj.secondarymanager }}</td>
+              <td>{{ prj.employeeNames }}</td>
+              <td>
+                <button class="btn btn-primary" (click)="editProject(prj)">Edit</button>
+              </td>
+            </tr>
+            <tr *ngIf="projects.length === 0">
+              <td colspan="6" class="text-center text-muted py-3">No projects found</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
