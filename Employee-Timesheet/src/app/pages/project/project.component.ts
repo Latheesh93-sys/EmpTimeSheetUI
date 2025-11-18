@@ -24,6 +24,7 @@ export class ProjectComponent implements OnInit {
   employeeMap: { [id: number]: EmpResponseDTO } = {};
   editingProjectId?: number;
   isLoading = false;
+  user:any;
 
   constructor(
     private fb: FormBuilder,
@@ -33,6 +34,8 @@ export class ProjectComponent implements OnInit {
   ) {}
 
   ngOnInit():void{
+    const userStr = localStorage.getItem('currentUser');
+    this.user = userStr ? JSON.parse(userStr) : null;
     this.initForm();
     this.loadEmployeesProjects();
   }

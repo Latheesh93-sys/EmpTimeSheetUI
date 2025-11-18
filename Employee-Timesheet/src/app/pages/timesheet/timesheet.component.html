@@ -1,5 +1,5 @@
 <div class="container py-4">
-  <div class="card shadow-sm">
+  <div class="card shadow-sm" *ngIf="user.designation!='Manager'&&user.designation!='Admin'">
     <div class="card-body">
       <h3 class="card-title mb-3">Add Timesheet</h3>
 
@@ -35,6 +35,13 @@
               Hours worked is required
             </div>
           </div>
+          <!-- Description -->
+          <div class="col-md-6">
+              <textarea formControlName="description" class="form-control" rows="4" placeholder="Enter description"></textarea>
+              <div *ngIf="timesheetForm.get('description')?.invalid && timesheetForm.get('description')?.touched" class="text-danger">
+              Description is required and max 500 characters.
+          </div>
+          </div>
         </div>
 
         <!-- Submit Button -->
@@ -56,17 +63,28 @@
           <thead class="table-dark">
             <tr>
               <th>Project</th>
+              <th>Employee</th>
               <th>Date</th>
               <th>Hours Worked</th>
+              <th>Description</th>
               <th>Actions</th>
             </tr>
           </thead>
           <tbody>
             <tr *ngFor="let tsheet of timesheets">
               <td>{{tsheet.projectName }}</td>
+              <td>{{tsheet.employeeName }}</td>
               <td>{{tsheet.date| date:'dd-MMM-yyyy' }}</td> 
               <td>{{tsheet.hoursWorked}}</td>
-              <td></td>
+              <td>{{tsheet.description}}</td>
+              <td *ngIf="(user.designation!='Admin'&&user.designation!='Manager')||(user.designation==='Manager'&& tsheet.isApproved==true)">
+                {{ tsheet.isApproved ? 'Approved' : 'Pending' }}
+              </td>
+              <td *ngIf="user.designation==='Manager'&& tsheet.isApproved==false">
+                <button class="btn btn-primary" (click)="approveTimeSheet(tsheet)">
+                  <span *ngIf="isApproving" class="spinner-border spinner-border-sm me-2"></span>
+                  Approve</button>
+              </td>
             </tr>
             <tr *ngIf="timesheets.length === 0">
               <td colspan="4" class="text-center text-muted py-3">No timesheets found</td>

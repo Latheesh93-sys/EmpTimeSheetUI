@@ -1,6 +1,6 @@
 <div class="container py-4">
   <!-- Employee Form -->
-  <form [formGroup]="employeeForm" (ngSubmit)="onSubmit()" class="card shadow-sm mb-4" autocomplete="new-email">
+  <form [formGroup]="employeeForm" *ngIf="user.designation==='Admin'||user.designation==='Manager'" (ngSubmit)="onSubmit()" class="card shadow-sm mb-4" autocomplete="new-email">
     <div class="card-body">
       <h3 class="card-title mb-3">Add Employee</h3>
       <div class="row g-3">
@@ -34,7 +34,11 @@
         <!-- Designation -->
         <div class="col-md-4">
           <label class="form-label">Designation</label>
-          <input type="text" formControlName="designation" class="form-control" placeholder="Enter designation" />
+          <select formControlName="designation" class="form-select">
+              <option value="">Select designation</option>
+              <option value="Manager">Manager</option>
+              <option value="Developer">Developer</option>
+            </select>
           <div *ngIf="employeeForm.get('designation')?.touched && employeeForm.get('designation')?.invalid" class="text-danger small mt-1">
             Designation is required
           </div>
@@ -55,6 +59,36 @@
   <div class="card shadow-sm">
     <div class="card-body">
       <h3 class="card-title mb-3">Employee List</h3>
+      <div class="row mt-4">
+        <div class="col-md-2">
+          <input class="form-control" [(ngModel)]="filter.name" (change)="onFilterChange()" placeholder="Search Name">
+        </div>
+        <div class="col-md-3">
+            <select class="form-select" [(ngModel)]="filter.designation" (change)="onFilterChange()" aria-placeholder="Select">
+              <option value="" disabled selected>Select designation</option>
+              <option value="Manager">Manager</option>
+              <option value="Developer">Developer</option>
+            </select>
+        </div>
+          <!-- Sort By -->
+         <div class="col-md-2">
+          <select class="form-select" [(ngModel)]="filter.sortBy" (change)="onFilterChange()" aria-placeholder="Sort By">
+            <option value="name">Sort By Name</option>
+            <option value="designation">Sort By Designation</option>
+          </select>
+          </div>
+          <!-- Sort Order -->
+          <div class="col-md-2">
+            <select class="form-select" [(ngModel)]="filter.sortOrder" (change)="onFilterChange()" aria-placeholder="Sort Order">
+              <option value="asc">Sort Asc</option>
+              <option value="desc">Sort Desc</option>
+            </select>
+          </div>
+          <div class="col-md-2">
+             <button class="btn btn-primary" (click)="onFilterChange()">Search</button>
+          </div>
+      </div>
+      <br>
       <div class="table-responsive">
         <table class="table table-striped table-hover align-middle">
           <thead class="table-dark">
@@ -76,6 +110,21 @@
           </tbody>
         </table>
       </div>
+      <div class="d-flex justify-content-between align-items-center" *ngIf="!(filter.pageNumber==1 && totalCount<=5)">
+      <button class="btn btn-outline-primary"
+              [disabled]="filter.pageNumber === 1"
+              (click)="onPageChange(filter.pageNumber - 1)">
+        Previous
+      </button>
+
+      <span>Page {{ filter.pageNumber }}</span>
+
+      <button class="btn btn-outline-primary"
+              [disabled]="employees.length < filter.pageSize"
+              (click)="onPageChange(filter.pageNumber + 1)">
+        Next
+      </button>
+    </div>
     </div>
   </div>
 </div>

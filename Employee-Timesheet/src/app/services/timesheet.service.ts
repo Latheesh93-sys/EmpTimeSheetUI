@@ -7,11 +7,17 @@ export interface AddTimesheetDTO {
   employeeId: number;
   hoursWorked: number;
   date: string;
+  description:string;
 }
 export interface TimesheetDTO{
+  id:number;
+  projectId:number;
   projectName:string;
+  employeeName:string;
   hoursWorked: number;
   date: string;
+  isApproved:boolean;
+  description:string;
 }
 @Injectable({
   providedIn: 'root'
@@ -27,5 +33,8 @@ export class TimesheetService {
   }
   getAll(): Observable<TimesheetDTO[]> {
         return this.http.get<TimesheetDTO[]>(this.apiUrl);
+  }
+   approveTimesheet(id: number): Observable<any> {
+    return this.http.put(`${this.apiUrl}/${id}/approve`, {});
   }
 }

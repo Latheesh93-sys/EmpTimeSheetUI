@@ -1,5 +1,5 @@
 <div class="container py-4">
-  <div class="card shadow-sm">
+  <div class="card shadow-sm" *ngIf="user.designation==='Manager'||user.designation==='Admin'">
     <div class="card-body">
       <h3 class="card-title mb-3">Add Project</h3>
 
@@ -96,7 +96,7 @@
               <th>Primary Manager</th>
               <th>Secondary Manager</th>
               <th>Employees</th>
-              <th>Actions</th>
+              <th *ngIf="user.designation==='Admin'||user.designation==='Manager'">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -107,7 +107,7 @@
               <td>{{ prj.primarymanager }}</td>
               <td>{{ prj.secondarymanager }}</td>
               <td>{{ prj.employeeNames }}</td>
-              <td>
+              <td *ngIf="user.designation==='Admin'||user.designation==='Manager'">
                 <button class="btn btn-primary" (click)="editProject(prj)">Edit</button>
               </td>
             </tr>

@@ -21,10 +21,10 @@ export class TimesheetComponent {
   timesheets:TimesheetDTO[]=[];
   user :any;
   isLoading=false;
+  isApproving=false;
   ngOnInit(): void {
     const userStr = localStorage.getItem('currentUser');
     this.user = userStr ? JSON.parse(userStr) : null;
-    console.log(this.user.designation);
     this.loadProjects();
     this.loadTimesheets();
     this.initForm();
@@ -32,6 +32,7 @@ export class TimesheetComponent {
   initForm() {
     this.timesheetForm = this.fb.group({
       workDate: ['', Validators.required],
+      description:['',Validators.required],
       hoursWorked: [null, [Validators.required, Validators.min(1)]],
       projectId: [this.projects[0]?.id || null, Validators.required] 
     });
@@ -50,7 +51,16 @@ export class TimesheetComponent {
   loadTimesheets(){
     this.timesheetService.getAll().subscribe({
       next: (data) => {
-      this.timesheets = data;
+        if (this.user.designation=='Admin')
+        {
+          this.timesheets=data;
+        }
+        else{
+          const projectIds = this.projects.map(p => p.id);
+          this.timesheets = data.filter(ts =>
+            projectIds.includes(ts.projectId)
+          );
+        }
     },
       error: (err) => console.error(err)
     });
@@ -73,6 +83,22 @@ export class TimesheetComponent {
         console.error(err);
         this.toastr.error('Adding timesheet failed','Error');
         this.isLoading = false;
+      }
+    });
+  }
+  approveTimeSheet(timesheet:TimesheetDTO){
+    this.isApproving=true;
+    this.timesheetService.approveTimesheet(timesheet.id).subscribe({
+      next: (res) => {
+        this.toastr.success('Timesheet approved successfully!');
+        this.loadTimesheets();
+        this.isApproving = false;
+        
+      },
+      error: (err) => {
+        console.error(err);
+        this.toastr.error('Adding timesheet failed','Error');
+        this.isApproving = false;
       }
     });
   }
